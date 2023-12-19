@@ -1,0 +1,213 @@
+---
+title: "Lab 3"
+author: "Krista Bogan & Jessica Booth"
+date: "2022-10-13"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+winequality_red <- read.csv("winequality-red.csv")
+winequalitysplit <- read.csv("winequalitysplit.csv")
+install.packages("ggplot")
+install.packages("ggplot2")
+install.packages("gridExtra")
+library("gridExtra")
+library("ggplot2")
+```
+
+***Part 1***
+
+***Part 2***
+
+**Business Understanding**
+
+While researching the different components of wine, it was found that each component had different effects on the quality of wine, and these effects sometimes varied depending on the type of wine. For instance, density is one of few factors involving wine quality that affects both red and white wine the same. When holding alcohol levels constant, density has little to no effect on the quality of wine contrary to popular belief. However, acidity does play a role in the taste and longevity of wine quality. Wine with a high acidic concentration provides a more tart taste, while lower acidity is smoother. Interestingly, wines with high acidity levels are more likely to improve over time, because of how acid works as a preserving agent in wine. It is important to note that as the acidity of wine increases, the pH level of the wine decreases, indicating an inverse relationship. With this knowledge it is fair to conclude that the lower the pH level of wine, the better the quality of wine. Other components present in wine had no correlation at all with the quality of wine,such as residual sugar and chlorides, instead they are just dependent on the consumer's acquired taste. The last variable we chose to examine was sulfates, and upon research it has been discovered that higher levels of sulfate speeds up the fermentation process of wine, which in turn decreases the quality of wine. Using the findings of our research, we will hypothesize how specific components of wine are predicted to affect the quality of wine.
+
+**Data Preparation**
+
+-   As a part of data preparation, we downloaded the red wine and white wine csv files and opened them in excel to view them. We noticed that the csv files were separated by semicolons rather than split into columns.
+
+```{r winee}
+head(winequality_red)
+```
+
+-   Using Microsoft Excel, we separated the file into columns using the *Text to Column* function, separating the values by semicolon. Upon doing this for both the red and white wine datasets, we combined them, and added a column for "wine type". It is also important to note that we replaced any spaces in our column names with "\_" so it is easy to use in our code.
+
+```{r cars}
+head(winequalitysplit)
+```
+
+-   Before creating any visualizations of the data, we wanted to run summary statistics to see which variables effectively impact the quality of wine. We see from these summary statistics that citric acid is not an effective predictor for wine quality.
+
+```{r winequality}
+
+winequalitylm = lm(quality ~ fixed_acidity + volatile_acidity+ citric_acid + residual_sugar + chlorides + free_sulfur_dioxide + total_sulfur_dioxide + density + pH + sulphates + alcohol + wine_type, data=winequalitysplit)
+summary(winequalitylm)
+
+```
+
+-   Now that we know which variables have a significant correlation value for our dependent variable, wine quality, we can start plotting.
+
+```{r wine}
+
+(ggplot(data=winequalitysplit, mapping=aes(x=quality, y=fixed_acidity, fill = wine_type)) +
+  stat_summary(fun.data=mean_sdl, geom="bar", position = "dodge") + scale_x_continuous(breaks = (seq(1,10))) + scale_y_continuous(breaks = seq(1,10)) + coord_cartesian(ylim=c(6,9)) +
+  labs(
+    y = "Fixed Acidity",
+    x = "Wine Quality",
+    fill = "Wine Type",
+    title = "Fixed Acidity by Quality"
+  ))
+
+
+(ggplot(data=winequalitysplit, mapping=aes(x=quality, y=volatile_acidity, fill = wine_type)) +
+  stat_summary(fun.data=mean_sdl, geom="bar", position = "dodge") + scale_x_continuous(breaks = (seq(1,10))) +
+  labs(
+    y = "Volatile Acidity",
+    x = "Wine Quality",
+    fill = "Wine Type",
+    title = "Volatile Acidity by Quality"
+  ))
+
+(ggplot(data=winequalitysplit, mapping=aes(x=quality, y=residual_sugar, fill = wine_type)) +
+  stat_summary(fun.data=mean_sdl, geom="bar", position = "dodge") + scale_x_continuous(breaks = (seq(1,10))) +
+  labs(
+    y = "Residual Sugar",
+    x = "Wine Quality",
+    fill = "Wine Type",
+    title = "Residual Sugar by Quality"
+  ))
+
+(ggplot(data=winequalitysplit, mapping=aes(x=quality, y=chlorides, fill = wine_type)) +
+  stat_summary(fun.data=mean_sdl, geom="bar", position = "dodge") + scale_x_continuous(breaks = (seq(1,10))) +
+  labs(
+    y = "Chlorides",
+    x = "Wine Quality",
+    fill = "Wine Type",
+    title = "Chlorides by Quality"
+  ))
+
+(ggplot(data=winequalitysplit, mapping=aes(x=quality, y=free_sulfur_dioxide, fill = wine_type)) +
+  stat_summary(fun.data=mean_sdl, geom="bar", position = "dodge") + scale_x_continuous(breaks = (seq(1,10))) +
+  labs(
+    y = "Free Sulfur Dioxide",
+    x = "Wine Quality",
+    fill = "Wine Type",
+    title = "Free Sulfur Dioxide by Quality"
+  ))
+
+(ggplot(data=winequalitysplit, mapping=aes(x=quality, y=total_sulfur_dioxide, fill = wine_type)) +
+  stat_summary(fun.data=mean_sdl, geom="bar", position = "dodge") + scale_x_continuous(breaks = (seq(1,10))) +
+  labs(
+    y = "Total Sulfur Dioxide",
+    x = "Wine Quality",
+    fill = "Wine Type",
+    title = "Total Sulfur Dioxide by Quality"
+  ))
+
+(ggplot(data=winequalitysplit, mapping=aes(x=quality, y=density, fill = wine_type)) +
+  stat_summary(fun.data=mean_sdl, geom="bar", position = "dodge") + scale_x_continuous(breaks = (seq(1,10))) + scale_y_continuous(seq(0.9)) + coord_cartesian(ylim=c(0.990,1)) +
+  labs(
+    y = "Density",
+    x = "Wine Quality",
+    fill = "Wine Type",
+    title = "Density by Quality"
+  ))
+
+(ggplot(data=winequalitysplit, mapping=aes(x=quality, y=pH, fill = wine_type)) +
+  stat_summary(fun.data=mean_sdl, geom="bar", position = "dodge") + scale_x_continuous(breaks = (seq(1,10))) +coord_cartesian(ylim=c(3,3.5)) +
+  labs(
+    y = "pH",
+    x = "Wine Quality",
+    fill = "Wine Type",
+    title = "pH by Quality"
+  ))
+
+(ggplot(data=winequalitysplit, mapping=aes(x=quality, y=alcohol, fill = wine_type)) +
+  stat_summary(fun.data=mean_sdl, geom="bar", position = "dodge") + scale_x_continuous(breaks = (seq(1,10))) + coord_cartesian(ylim=c(7.5,12.5)) +
+  labs(
+    y = "Alcohol",
+    x = "Wine Quality",
+    fill = "Wine Type",
+    title = "Alcohol level by Quality"
+  ))
+
+```
+
+```{r winequalityyy}
+
+plot1 <- (ggplot(winequalitysplit) +
+  aes(x = fixed_acidity,
+      y = quality) +
+  geom_point(alpha = 0.05) +
+  geom_jitter(alpha = 0.035) +
+  geom_smooth(method=lm) +
+   labs(title="Fixed Acidity on Wine Quality",
+       x="Fixed Acidity", y = "Wine Quality"))
+
+plot2 <-(ggplot(winequalitysplit) +
+  aes(x = fixed_acidity,
+      y = quality,
+      color = wine_type) +
+  geom_point(alpha = 0.035) +
+  geom_jitter(alpha = 0.035) +
+  geom_smooth(method=lm) +
+  labs(title="Fixed Acidity on Quality, by Type",
+       x="Fixed Acidity", y = "Wine Quality"))
+
+plot3 <- (ggplot(winequalitysplit) +
+  aes(x = volatile_acidity,
+      y = quality) +
+  geom_point(alpha = 0.05) +
+  geom_jitter(alpha = 0.035) +
+  geom_smooth(method=lm) +
+   labs(title="Volatile Acidity on Wine Quality",
+       x="Volatile Acidity", y = "Wine Quality"))
+
+plot6 <- (ggplot(winequalitysplit) +
+  aes(x = residual_sugar,
+      y = quality) +
+  geom_point(alpha = 0.05) +
+  geom_jitter(alpha = 0.035) +
+  geom_smooth(method=lm) +
+   labs(title="Residual Sugar on Wine Quality",
+       x="Residual Sugar", y = "Wine Quality"))
+
+plot7 <- (ggplot(winequalitysplit) +
+  aes(x = chlorides,
+      y = quality) +
+  geom_point(alpha = 0.05) +
+  geom_jitter(alpha = 0.035) +
+  geom_smooth(method=lm) +
+   labs(title="Chlorides on Wine Quality",
+       x="Chlories", y = "Wine Quality"))
+
+
+plot9 <- (ggplot(winequalitysplit) +
+  aes(x = free_sulfur_dioxide,
+      y = quality) +
+  geom_point(alpha = 0.05) +
+  geom_jitter(alpha = 0.035) +
+  geom_smooth(method=lm) +
+   labs(title="Free Sulfur Dioxide on Wine Quality",
+       x="Free Sulfur Dioxide", y = "Wine Quality"))
+
+plot10 <-(ggplot(winequalitysplit) +
+  aes(x = free_sulfur_dioxide,
+      y = quality,
+      color = wine_type) +
+  geom_point(alpha = 0.035) +
+  geom_jitter(alpha = 0.035) +
+  geom_smooth(method=lm) +
+  labs(title="Free Sulfur Dioxide on Quality, by Type",
+       x="Chlorides", y = "Wine Quality"))
+
+grid.arrange(plot1, plot2, plot3, plot4, ncol = 2, nrow = 2)
+  grid.arrange(plot5, plot6, ncol = 2, nrow = 2)
+    grid.arrange(plot7, plot9, plot10, ncol = 2, nrow = 2)
+```
+
+## Deployment
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
