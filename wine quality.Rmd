@@ -1,7 +1,6 @@
 ---
 title: "Lab 3"
-author: "Krista Bogan & Jessica Booth"
-date: "2022-10-13"
+author: "Krista Bogan"
 output: pdf_document
 ---
 
